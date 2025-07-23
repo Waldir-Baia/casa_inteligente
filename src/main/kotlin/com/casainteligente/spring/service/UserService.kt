@@ -41,7 +41,7 @@ class UserService(
             UserDTO(
                 login = user.login,
                 url = user.url,
-                roles = user.roles.map { it.name }.toSet()
+                roles = user.roles.map { it.nome }.toSet()
             )
         }
     }

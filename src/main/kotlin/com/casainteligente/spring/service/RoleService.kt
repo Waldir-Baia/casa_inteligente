@@ -12,11 +12,11 @@ class RoleService(
 ) : IRoleService {
 
     override fun criarPerfil(roleDto: RoleDTO) {
-        val existeRole = roleRepository.buscarPeloNome(roleDto.nome)
+        val existeRole = roleRepository.findByNome(roleDto.nome)
         if(existeRole != null){
             throw RuntimeException("Perfil já existe!")
         }
-        val role = Role(name = roleDto.nome)
+        val role = Role(nome = roleDto.nome)
         roleRepository.save(role)
     }
 }
