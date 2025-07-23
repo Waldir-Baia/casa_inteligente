@@ -24,6 +24,9 @@ data class User(
     @Column(nullable = false)
     val url: String,
 
+    @Column(nullable = false)
+    var password: String,
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name = "user_roles",

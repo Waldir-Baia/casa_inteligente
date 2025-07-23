@@ -52,6 +52,7 @@ dependencies {
 	runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.6")
 
 
+
 }
 
 kotlin {
