@@ -24,7 +24,7 @@ class UserService(
             .block() ?: emptyList()
 
         usuarioGitHub.forEach { result ->
-            val existeUsuario = userRepository.buscarLogin(result.login)
+            val existeUsuario = userRepository.findByLogin(result.login)
             if(existeUsuario == null){
                 val user = User(
                     login = result.login,
