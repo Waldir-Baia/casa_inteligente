@@ -13,7 +13,7 @@ import jakarta.persistence.Table
 
 
 @Entity
-@Table(name = "users")
+@Table(name = "user")
 data class User(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
@@ -23,9 +23,6 @@ data class User(
 
     @Column(nullable = false)
     val url: String,
-
-    @Column(nullable = false)
-    var password: String,
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(

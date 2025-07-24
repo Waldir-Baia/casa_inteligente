@@ -31,7 +31,7 @@ dependencies {
 
 	//Mysql
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-	runtimeOnly("com.mysql:mysql-connector-j")
+	implementation("mysql:mysql-connector-java:8.0.33")
 
 	//WebClient
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
@@ -43,7 +43,7 @@ dependencies {
 	testImplementation("io.mockk:mockk:1.13.11")
 
 	//Flyway
-	implementation("org.flywaydb:flyway-core")
+	implementation("org.flywaydb:flyway-core:11.7.2")
 
 	// Autenticação JWT com Spring Security
 	implementation("org.springframework.boot:spring-boot-starter-security")

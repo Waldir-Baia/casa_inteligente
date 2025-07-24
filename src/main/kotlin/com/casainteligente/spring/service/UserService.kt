@@ -28,8 +28,7 @@ class UserService(
             if(existeUsuario == null){
                 val user = User(
                     login = result.login,
-                    url = result.url,
-                    password = ""
+                    url = result.url
                 )
                 userRepository.save(user)
             }
