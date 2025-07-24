@@ -18,6 +18,8 @@ repositories {
 	mavenCentral()
 }
 
+ext["flyway.version"] = "5.2.4"
+
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
@@ -43,7 +45,7 @@ dependencies {
 	testImplementation("io.mockk:mockk:1.13.11")
 
 	//Flyway
-	implementation("org.flywaydb:flyway-core:11.7.2")
+	implementation("org.flywaydb:flyway-core")
 
 	// Autenticação JWT com Spring Security
 	implementation("org.springframework.boot:spring-boot-starter-security")
