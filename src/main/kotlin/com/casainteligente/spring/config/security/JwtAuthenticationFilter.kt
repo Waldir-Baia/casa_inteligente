@@ -12,12 +12,15 @@ import org.springframework.stereotype.Component
 import org.springframework.util.StringUtils
 import org.springframework.web.filter.OncePerRequestFilter
 import java.io.IOException
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 @Component
 class JwtAuthenticationFilter(
     private val tokenProvider: JwtTokenProvider,
     private val userDetailsService: UserDetailsService
 ) : OncePerRequestFilter() {
+    private val logger: Logger = LoggerFactory.getLogger(JwtAuthenticationFilter::class.java)
 
     @Throws(ServletException::class, IOException::class)
     override fun doFilterInternal(
@@ -27,15 +30,21 @@ class JwtAuthenticationFilter(
     ) {
         try {
             val jwt = getJwtFromRequest(request)
-            if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt.toString())) {
-                val username = tokenProvider.getUsernameFromJwt(jwt.toString())
-                val userDetails = userDetailsService.loadUserByUsername(username)
-                val authentication = UsernamePasswordAuthenticationToken(userDetails, null, userDetails.authorities)
-                authentication.details = WebAuthenticationDetailsSource().buildDetails(request)
-                SecurityContextHolder.getContext().authentication = authentication
+            if (StringUtils.hasText(jwt)) {
+                if (tokenProvider.validateToken(jwt!!)) {
+                    val username = tokenProvider.getUsernameFromJwt(jwt)
+                    val userDetails = userDetailsService.loadUserByUsername(username)
+                    val authentication = UsernamePasswordAuthenticationToken(userDetails, null, userDetails.authorities)
+                    authentication.details = WebAuthenticationDetailsSource().buildDetails(request)
+                    SecurityContextHolder.getContext().authentication = authentication
+                } else {
+                    SecurityContextHolder.clearContext()
+                    logger.warn("Token JWT inválido para a requisição: ${request.requestURI}")
+                }
             }
         } catch (ex: Exception) {
-            // Logar o erro
+            logger.error("Erro de autenticação para a requisição: ${request.requestURI}", ex)
+            SecurityContextHolder.clearContext()
         }
         filterChain.doFilter(request, response)
     }

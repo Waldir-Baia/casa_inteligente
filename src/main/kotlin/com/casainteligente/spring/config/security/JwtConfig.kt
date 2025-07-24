@@ -1,5 +1,6 @@
 package com.casainteligente.spring.config.security
 
+import JwtAuthenticationEntryPoint
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationManager
@@ -18,21 +19,35 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 class JwtConfig(
     private val jwtAutentication: JwtAuthenticationFilter,
-    private val userDetalheService: UserDetailsService
+    private val userDetalheService: UserDetailsService,
+   //private val jwtAuthenticationEntryPoint: JwtAuthenticationEntryPoint
 ) {
+
+    @Bean
+    fun jwtAuthenticationEntryPoint(): JwtAuthenticationEntryPoint {
+        return JwtAuthenticationEntryPoint()
+    }
 
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http
             .csrf { it.disable() }
+            .exceptionHandling { it.authenticationEntryPoint(jwtAuthenticationEntryPoint()) }
             .authorizeHttpRequests { auth ->
-                auth
-                    .requestMatchers("/auth/**").permitAll()
-                    .requestMatchers("/users/syncGit").permitAll()
-                    .anyRequest().authenticated()
+                auth.requestMatchers("/swagger-ui.html").permitAll()
+                auth.requestMatchers("/swagger-ui/**").permitAll()
+                auth.requestMatchers("/v3/api-docs/**").permitAll()
+                auth.requestMatchers("/swagger-resources/**").permitAll()
+                auth.requestMatchers("/webjars/**").permitAll()
+
+                // Permissões Autenticação e Sincronização
+                auth.requestMatchers("/auth/**").permitAll()
+                auth.requestMatchers("/users/syncGit").permitAll()
+
+                auth.anyRequest().authenticated()
             }
             .sessionManagement { session ->
-                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Não cria sessão
+                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             }
             .addFilterBefore(jwtAutentication, UsernamePasswordAuthenticationFilter::class.java)
         return http.build()
